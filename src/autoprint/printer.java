@@ -1,4 +1,4 @@
-package printer;
+package autoprint;
 
 import java.awt.*;
 import java.awt.print.*;
