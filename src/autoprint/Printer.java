@@ -78,7 +78,7 @@ public class Printer implements Printable {
         			formattedString.add(line);
         		}
         	}
-        	//gets place of page breaks
+        	//gets line number of page breaks
         	int numBreaks = (formattedString.size()-1)/linesPerPage;
         	pageBreaks = new int[numBreaks];
         	for(int b = 0; b < numBreaks; b++){
