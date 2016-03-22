@@ -7,15 +7,17 @@ import java.util.Vector;
 public class Printer implements Printable {
 	PrinterJob printJob;
 	String stringToPrint;
+	boolean ok;
 	int[] pageBreaks = null;
-	Vector<String> formattedString = null;
+	Vector<String> formattedString = new Vector<String>();
 	public void init(){
 	printJob = PrinterJob.getPrinterJob();
+	ok = printJob.printDialog();
 	}
 	
 	public void startPrint(String s){
 		stringToPrint = s;
-		boolean ok = printJob.printDialog();
+		System.out.println(s);
 		if (ok){
 			PageFormat pf = printJob.defaultPage();
 			Paper p = pf.getPaper();
@@ -105,7 +107,6 @@ public class Printer implements Printable {
 			y += lineHeight;
 			graphics.drawString(formattedString.get(line), 0, y);
 		}
-		
 		return Printable.PAGE_EXISTS;
 	}
 }
