@@ -44,9 +44,9 @@ public class Main extends Application{
 		w.setPromptText("Width");
 		h.setPromptText("Height");
 		portNum.setPromptText("Port Number (optional)");
-		w.setStyle("-fx-prompt-text-fill: opaque;");
-		h.setStyle("-fx-prompt-text-fill: opaque;");
-		portNum.setStyle("-fx-prompt-text-fill: opaque;");
+		w.setStyle("-fx-prompt-text-fill: grey;");
+		h.setStyle("-fx-prompt-text-fill: grey;");
+		portNum.setStyle("-fx-prompt-text-fill: grey;");
 		
 		startB.setText("Start Taking Orders");
 		BooleanBinding bb = new BooleanBinding(){

@@ -2,6 +2,8 @@ package autoprint;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Server implements Runnable{
 	double width;
@@ -23,21 +25,21 @@ public class Server implements Runnable{
 	 * @param p
 	 */
 	public static void listenSocket(Printer p){
+		ReentrantLock printerLock = new ReentrantLock();
 		try{
 			server = new ServerSocket(portNum);
 		}catch(IOException ioe){
-			System.out.println("Exception in main");
+			System.out.println("Exception creating server");
 		}
 		while(true){
-			ClientWorker w;
+			Socket clientSocket = null;
 			try{
-				server.setSoTimeout(60000);
-				w = new ClientWorker(server.accept(), p);
-				Thread t = new Thread(w);
-				t.start();
+				clientSocket = server.accept();
 			}catch(IOException e){
 				System.out.println("thread clientworker error");
 			}
+			new Thread(
+			new ClientWorker(clientSocket, p, printerLock)).start();
 		}
 	}
 	public void run(){

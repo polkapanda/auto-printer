@@ -5,20 +5,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class ClientWorker implements Runnable{
 	private Socket client;
 	private Printer p;
-	private Lock printerLock = new ReentrantLock();;
+	private Lock printerLock;
 	
-	ClientWorker(Socket client, Printer p){
+	ClientWorker(Socket client, Printer p, Lock printerLock){
 			this.client = client;
 			this.p = p;
+			this.printerLock = printerLock;
 	}
 
 	public void run(){
-			String line = null;
+			String line = new String();
 			BufferedReader in = null;
 			try {
 				in = new BufferedReader (
@@ -29,14 +29,12 @@ public class ClientWorker implements Runnable{
 			
 				try{
 					line = in.readLine();
-					
 				}catch (Exception e){
 					System.out.println("line error");
 				}
 				printerLock.lock();
 				try{
 				p.startPrint(line);
-				p.clearString();
 				}finally{
 					printerLock.unlock();
 				}

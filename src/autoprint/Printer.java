@@ -28,6 +28,7 @@ public class Printer implements Printable {
 	
 	public void startPrint(String s){
 		stringToPrint = s;
+		formattedString = null;
 		if (ok){
 			PageFormat pf = printJob.defaultPage();
 			Paper p = pf.getPaper();
@@ -42,6 +43,7 @@ public class Printer implements Printable {
 			pf.setOrientation(PageFormat.PORTRAIT);
 			pf.setPaper(p);
 			printJob.setPrintable(this, pf);
+			System.out.println("hello");
 			try{
 				printJob.print();
 			}catch(PrinterException pe){
@@ -52,14 +54,14 @@ public class Printer implements Printable {
 		}
 	}
 	
-	public void clearString(){
-		formattedString = null;
-	}
 
 	
 
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-        
+        if(stringToPrint == null){
+        	System.out.println("HERE IS THE PROBLEM");
+        }else
+        	System.out.println(stringToPrint);
 		Font font = new Font("Serif", Font.PLAIN, 10);
         graphics.setColor(Color.black);
 		FontMetrics metrics = graphics.getFontMetrics(font);
