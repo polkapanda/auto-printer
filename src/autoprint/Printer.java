@@ -13,11 +13,17 @@ public class Printer implements Printable {
 	int[] pageBreaks = null;
 	Vector<String> formattedString = null;
 	
-	public Printer(double w, double h){
+	public Boolean init(double w, double h){
+	
 	printJob = PrinterJob.getPrinterJob();
 	ok = printJob.printDialog();
 	widthInches = w;
 	heightInches = h;
+	if (ok){
+	return true;
+	}else{
+		return false;
+	}
 	}
 	
 	public void startPrint(String s){

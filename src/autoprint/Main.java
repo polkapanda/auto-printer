@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -21,16 +22,33 @@ public class Main extends Application{
 		launch(args);
 	}
 	
+	static Button startB =  new Button();
+	static TextField w = new TextField(), h = new TextField(),portNum = new TextField();
+	static Text error = new Text();
+	public static void restartPrinter(){
+		w.setDisable(false);
+		h.setDisable(false);
+		portNum.setDisable(false);
+		startB.setVisible(true);
+		error.setText("Please Choose a Printer");
+	}
+	
+	public static void goodPrint(){
+		error.setText("Successfully Connected!");
+	}
+	
+	
 	@Override
 	public void start(Stage PrimaryStage){
 		PrimaryStage.setTitle("Auto-Printer");
-		Button startB =  new Button();
-		TextField w = new TextField(), h = new TextField();
-		Text error = new Text();
 		w.setPromptText("Width");
 		h.setPromptText("Height");
-		startB.setText("Start Taking Orders");
+		portNum.setPromptText("Port Number (optional)");
+		w.setStyle("-fx-prompt-text-fill: opaque;");
+		h.setStyle("-fx-prompt-text-fill: opaque;");
+		portNum.setStyle("-fx-prompt-text-fill: opaque;");
 		
+		startB.setText("Start Taking Orders");
 		BooleanBinding bb = new BooleanBinding(){
 			{
 				super.bind(w.textProperty(), h.textProperty());
@@ -41,17 +59,34 @@ public class Main extends Application{
 			}
 		};
 		startB.disableProperty().bind(bb);
-	
+		
+		
 		startB.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent event){
+				try{
+				Server s;
 				double x = Double.parseDouble(w.getText());
 				double y = Double.parseDouble(h.getText());
-				Server s = new Server(x, y);
+				int port;
+				if (!portNum.getText().isEmpty()){
+					port = Integer.parseInt(portNum.getText());
+					error.setText("");
+					s = new Server(x, y, port);
+				}else{
+					error.setText("");
+					s = new Server(x, y);
+				}
+				w.setDisable(true);
+				h.setDisable(true);
+				portNum.setDisable(true);
 				Thread serverThread = new Thread(s);
 				serverThread.setDaemon(true);
 				serverThread.start();	
 				startB.setVisible(false);
+				}catch(Exception e){
+					error.setText("Enter Paper Height and Width as a decimal number please");
+				}
 			}
 		});
 		
@@ -67,11 +102,17 @@ public class Main extends Application{
 		StackPane root = new StackPane();
 		GridPane grid = new GridPane();
 		grid.add(w, 0, 0);
+		grid.setVgap(10.0d);
 		grid.add(h, 0, 1);
-		grid.add(startB, 0, 2);
-		grid.add(error, 0, 3);
+		grid.add(portNum, 0, 2);
+		grid.add(startB, 0, 3);
+		grid.setAlignment(Pos.CENTER);
 		root.getChildren().addAll(grid);
-		PrimaryStage.setScene(new Scene(root, 300, 200));
+		error.setTranslateY(80);
+		root.getChildren().add(error);
+		
+		PrimaryStage.setResizable(false);
+		PrimaryStage.setScene(new Scene(root, 375, 250));
 		PrimaryStage.show();
 	}
 

@@ -6,10 +6,17 @@ import java.net.ServerSocket;
 public class Server implements Runnable{
 	double width;
 	double height;
+	static int portNum;
 	static ServerSocket server;
-	public Server(double x, double y) {
+	public Server(double x, double y, int pN) {
 		width = x;
 		height = y;
+		portNum = pN;
+	}
+	public Server(double x, double y){
+		width = x;
+		height = y;
+		portNum = 5969;
 	}
 	/**
 	 * 
@@ -17,7 +24,7 @@ public class Server implements Runnable{
 	 */
 	public static void listenSocket(Printer p){
 		try{
-			server = new ServerSocket(5969);
+			server = new ServerSocket(portNum);
 		}catch(IOException ioe){
 			System.out.println("Exception in main");
 		}
@@ -34,8 +41,13 @@ public class Server implements Runnable{
 		}
 	}
 	public void run(){
-		Printer p = new Printer(width, height);
-		//listenSocket(p);
-		p.startPrint("Really long string to print that hopefully will work and stuff but i really dont know as I am unable to get to a printer right now but maybe I can see if someone I know has a printer I can use for great convinience.");
+		Printer p = new Printer();
+		if (p.init(width, height) == true){
+			Main.goodPrint();
+		}else{
+			Main.restartPrinter();
+		}
+		listenSocket(p);
+		//p.startPrint("Really long string to print that hopefully will work and stuff but i really dont know as I am unable to get to a printer right now but maybe I can see if someone I know has a printer I can use for great convinience.");
 	}
 }
