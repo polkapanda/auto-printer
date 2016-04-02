@@ -43,7 +43,6 @@ public class Printer implements Printable {
 			pf.setOrientation(PageFormat.PORTRAIT);
 			pf.setPaper(p);
 			printJob.setPrintable(this, pf);
-			System.out.println("hello");
 			try{
 				printJob.print();
 			}catch(PrinterException pe){
@@ -58,25 +57,18 @@ public class Printer implements Printable {
 	
 
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-        if(stringToPrint == null){
-        	System.out.println("HERE IS THE PROBLEM");
-        }else
-        	System.out.println(stringToPrint);
-		Font font = new Font("Serif", Font.PLAIN, 10);
+        Font font = new Font("Serif", Font.PLAIN, 10);
         graphics.setColor(Color.black);
 		FontMetrics metrics = graphics.getFontMetrics(font);
         int lineHeight = metrics.getHeight();
         graphics.setFont(font);
         int linesPerPage = (int) pageFormat.getImageableHeight()/lineHeight;
         double width = pageFormat.getImageableWidth();
-        System.out.println("unformated width: " + metrics.stringWidth(stringToPrint));
-        System.out.println("Page Width: " + width);
-        
+         
         //breaks the text file from one big string into an array of strings
         if(formattedString == null){
         	formattedString = new Vector<String>();
         	for (String line : stringToPrint.split("\n")){
-        	System.out.println("line length: " + metrics.stringWidth(line));
         	if (metrics.stringWidth(line) > width){
         		String shortLine = new String("");
         		for (String word : line.split(" ")){
@@ -123,7 +115,6 @@ public class Printer implements Printable {
 			y += lineHeight;
 			graphics.drawString(formattedString.get(line), 6, y);
 		}
-		System.out.println("END!!");
 		return Printable.PAGE_EXISTS;
 	}
 }

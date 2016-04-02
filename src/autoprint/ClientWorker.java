@@ -18,7 +18,7 @@ public class ClientWorker implements Runnable{
 	}
 
 	public void run(){
-			String line = new String();
+			String line = null;
 			BufferedReader in = null;
 			try {
 				in = new BufferedReader (
@@ -28,22 +28,33 @@ public class ClientWorker implements Runnable{
 			}
 			
 				try{
-					line = in.readLine();
+					String s = new String();
+					while((s = in.readLine()) != null){
+					if (s.equals("<order>")){
+						line = new String();
+					}else if (s.equals("</order>")){
+						line += "";
+					}else{
+						line+= s + "\n";
+					}
+					}
 				}catch (Exception e){
-					System.out.println("line error");
+					System.out.println(e.getMessage());
 				}
+				if (line != null){
 				printerLock.lock();
 				try{
 				p.startPrint(line);
 				}finally{
 					printerLock.unlock();
 				}
+				}
+				
 				try {
 					client.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	}
-
+		}
 }
