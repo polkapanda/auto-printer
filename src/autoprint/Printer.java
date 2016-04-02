@@ -12,13 +12,16 @@ public class Printer implements Printable {
 	boolean ok;
 	int[] pageBreaks = null;
 	Vector<String> formattedString = null;
+	Font font = new Font("Serif", Font.PLAIN, 10);
 	
-	public Boolean init(double w, double h){
+	public Boolean init(double w, double h, String s, int fsize){
 	
 	printJob = PrinterJob.getPrinterJob();
 	ok = printJob.printDialog();
 	widthInches = w;
 	heightInches = h;
+	font = new Font(s, Font.PLAIN, fsize);
+
 	if (ok){
 	return true;
 	}else{
@@ -53,11 +56,10 @@ public class Printer implements Printable {
 		}
 	}
 	
-
+	
 	
 
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-        Font font = new Font("Serif", Font.PLAIN, 10);
         graphics.setColor(Color.black);
 		FontMetrics metrics = graphics.getFontMetrics(font);
         int lineHeight = metrics.getHeight();
@@ -69,11 +71,11 @@ public class Printer implements Printable {
         if(formattedString == null){
         	formattedString = new Vector<String>();
         	for (String line : stringToPrint.split("\n")){
-        	if (metrics.stringWidth(line) > width){
+        	if (metrics.stringWidth(line) + 6 > width){
         		String shortLine = new String("");
         		for (String word : line.split(" ")){
         			//adds words until the line length is met
-        			if (metrics.stringWidth(shortLine + word + " ") < width){
+        			if (metrics.stringWidth(shortLine + word + " ") + 6 < width){
         				shortLine += (word + " ");
         			}
         			//adds the shorter line to a vector and then resets the line to the new word
