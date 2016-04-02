@@ -36,8 +36,15 @@ public class ClientWorker implements Runnable{
 				printerLock.lock();
 				try{
 				p.startPrint(line);
+				p.clearString();
 				}finally{
 					printerLock.unlock();
+				}
+				try {
+					client.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 	}
 
