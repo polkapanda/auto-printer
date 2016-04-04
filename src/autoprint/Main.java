@@ -54,6 +54,10 @@ public class Main extends Application{
 		try{
 			double x = Double.parseDouble(w.getText());
 			double y = Double.parseDouble(h.getText());
+			if (x <= 0 || y <= 0){
+				Exception e = new Exception();
+				throw e;
+			}
 			String sFont = fontBox.getValue();
 			int port;
 			if (!portNum.getText().isEmpty()){
@@ -102,8 +106,8 @@ public class Main extends Application{
 			serverThread.start();	
 			startB.setVisible(false);
 			}catch(Exception e){
-				error.setText("Enter Paper Height and Width as a decimal number please."
-							+ "\nIf you entered font size please make sure it is a whole number.");
+				error.setText("Enter Paper Height and Width as a positive decimal number please."
+							+ "\nIf you entered font size please make sure it is a positive whole number.");
 			}
 	}
 	
@@ -176,12 +180,12 @@ public class Main extends Application{
 		grid.setAlignment(Pos.CENTER);
 		root.getChildren().addAll(grid);
 		runningMessage.setTranslateY(20);
-		error.setTranslateY(110);
+		error.setTranslateY(120);
 		root.getChildren().add(runningMessage);
 		root.getChildren().add(error);
 		PrimaryStage.getIcons().add(new Image("/printerIcon.png"));
 		PrimaryStage.setResizable(false);
-		PrimaryStage.setScene(new Scene(root, 380, 260));
+		PrimaryStage.setScene(new Scene(root, 395, 270));
 		PrimaryStage.show();
 	}
 
