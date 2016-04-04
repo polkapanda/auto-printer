@@ -14,8 +14,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -29,6 +31,7 @@ public class Main extends Application{
 	static Button startB =  new Button();
 	static TextField w = new TextField(), h = new TextField(),portNum = new TextField();
 	static Text error = new Text();
+	static Text runningMessage = new Text();
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -44,7 +47,7 @@ public class Main extends Application{
 	}
 	
 	public static void goodPrint(){
-		error.setText("Running Please Do Not Close!");
+		runningMessage.setText("Running Please Do Not Close!");
 	}
 	
 	public void startServer(){
@@ -62,8 +65,13 @@ public class Main extends Application{
 						s = new Server(x, y, port, sFont);
 					}
 				}else{
-					s = new Server(x, y , port, sFont, 
-							Integer.parseInt(fontSize.getText()));
+					int fs = Integer.parseInt(fontSize.getText());
+					if (fs > 0)
+						s = new Server(x, y , port, sFont, fs);
+					else{
+						Exception e = new Exception();
+						throw e;
+					}
 				}
 				error.setText("");
 			}else{
@@ -74,20 +82,28 @@ public class Main extends Application{
 						s = new Server(x, y, sFont);
 					}
 				}else{
-					s = new Server(x, y, sFont, 
-							Integer.parseInt(fontSize.getText()));
+					int fs = Integer.parseInt(fontSize.getText());
+					if (fs > 0)
+						s = new Server(x, y, sFont, fs);
+					else{
+						Exception e = new Exception();
+						throw e;
+					}
 				}
 				error.setText("");
 			}
 			w.setDisable(true);
 			h.setDisable(true);
 			portNum.setDisable(true);
+			fontBox.setDisable(true);
+			fontSize.setDisable(true);
 			Thread serverThread = new Thread(s);
 			serverThread.setDaemon(true);
 			serverThread.start();	
 			startB.setVisible(false);
 			}catch(Exception e){
-				error.setText("Enter Paper Height and Width as a decimal number please");
+				error.setText("Enter Paper Height and Width as a decimal number please."
+							+ "\nIf you entered font size please make sure it is a whole number.");
 			}
 	}
 	
@@ -100,6 +116,7 @@ public class Main extends Application{
 		w.setStyle("-fx-prompt-text-fill: grey;");
 		h.setStyle("-fx-prompt-text-fill: grey;");
 		portNum.setStyle("-fx-prompt-text-fill: grey;");
+		error.setFill(Color.RED);
 		fontSize.setPromptText("Font Size (optional)");
 		fontSize.setDisable(true);
 		fontBox.setPromptText("Font (optional)");
@@ -158,11 +175,13 @@ public class Main extends Application{
 		grid.add(fontSize, 0, 5);
 		grid.setAlignment(Pos.CENTER);
 		root.getChildren().addAll(grid);
-		error.setTranslateY(20);
+		runningMessage.setTranslateY(20);
+		error.setTranslateY(110);
+		root.getChildren().add(runningMessage);
 		root.getChildren().add(error);
-		
+		PrimaryStage.getIcons().add(new Image("/printerIcon.png"));
 		PrimaryStage.setResizable(false);
-		PrimaryStage.setScene(new Scene(root, 375, 250));
+		PrimaryStage.setScene(new Scene(root, 380, 260));
 		PrimaryStage.show();
 	}
 
