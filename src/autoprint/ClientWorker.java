@@ -1,3 +1,8 @@
+/**
+ * @author - Robert Miller
+ * @author - Hunter Quant
+**/
+
 package autoprint;
 
 import java.io.BufferedReader;
