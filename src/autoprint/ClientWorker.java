@@ -9,7 +9,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.locks.Lock;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class ClientWorker implements Runnable{
 	private Socket client;
@@ -49,6 +52,8 @@ public class ClientWorker implements Runnable{
 					while((s = in.readLine()) != null){
 					if (s.equals("<order>")){
 						line = new String();
+						line += "Time Ordered: ";
+						line += new SimpleDateFormat("HH:mm:ss").format(new Date()) + '\n';
 					}else if (s.equals("</order>")){
 						line += "";
 					}else{
