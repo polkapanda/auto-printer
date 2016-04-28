@@ -5,6 +5,16 @@ import java.awt.print.*;
 import java.util.Vector;
 
 public class Printer implements Printable {
+	/**
+	 * widthInches - width of paper
+	 * heightInches - height of paper 
+	 * printJob - the printJob
+	 * stringToPrint - the unformatted order string
+	 * ok - whether the printer is ok
+	 * pageBreaks - line numbers of where the page breaks start
+	 * formattedString - each entry in the vector is a line to print
+	 * font - initialized to the default font
+	 */
 	double widthInches;
 	double heightInches;
 	PrinterJob printJob;
@@ -14,21 +24,29 @@ public class Printer implements Printable {
 	Vector<String> formattedString = null;
 	Font font = new Font("Serif", Font.PLAIN, 10);
 	
-	public Boolean init(double w, double h, String s, int fsize){
+	/**
+	 * sets the values to what is passed
+	 * @param w - width of paper
+	 * @param h - height of paper
+	 * @param font - font
+	 * @param fsize - font size
+	 * @return returns whether the printer is ok to use
+	 */
+	public Boolean init(double w, double h, String font, int fsize){
 	
 	printJob = PrinterJob.getPrinterJob();
 	ok = printJob.printDialog();
 	widthInches = w;
 	heightInches = h;
-	font = new Font(s, Font.PLAIN, fsize);
+	this.font = new Font(font, Font.PLAIN, fsize);
 
-	if (ok){
-	return true;
-	}else{
-		return false;
-	}
+	return ok;
 	}
 	
+	/**
+	 * gets stuff ready to print the string
+	 * @param s - a string to print
+	 */
 	public void startPrint(String s){
 		stringToPrint = s;
 		formattedString = null;
@@ -58,7 +76,9 @@ public class Printer implements Printable {
 	
 	
 	
-
+	/**
+	 * formats the string and then prints it line by line
+	 */
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
         graphics.setColor(Color.black);
 		FontMetrics metrics = graphics.getFontMetrics(font);
@@ -90,7 +110,7 @@ public class Printer implements Printable {
         		//adds the line if it is shorter than the line width
         		formattedString.add(line);
         	}
-       	}
+        	}
         }
         
         //gets line number of page breaks

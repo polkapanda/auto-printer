@@ -11,12 +11,24 @@ public class ClientWorker implements Runnable{
 	private Printer p;
 	private Lock printerLock;
 	
+	/**
+	 * 
+	 * @param client - the client socket
+	 * @param p - the printer
+	 * @param printerLock - lock so only one thread prints at a time
+	 */
 	ClientWorker(Socket client, Printer p, Lock printerLock){
 			this.client = client;
 			this.p = p;
 			this.printerLock = printerLock;
 	}
 
+	/**
+	 * gets the order from the client
+	 * locks the printer object
+	 * prints the order
+	 * unlocks the printer and then closes the client
+	 */
 	public void run(){
 			String line = null;
 			BufferedReader in = null;
@@ -38,6 +50,7 @@ public class ClientWorker implements Runnable{
 						line+= s + "\n";
 					}
 					}
+					in.close();
 				}catch (Exception e){
 					System.out.println(e.getMessage());
 				}
@@ -49,7 +62,6 @@ public class ClientWorker implements Runnable{
 					printerLock.unlock();
 				}
 				}
-				
 				try {
 					client.close();
 				} catch (IOException e) {

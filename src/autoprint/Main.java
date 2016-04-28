@@ -24,6 +24,17 @@ import javafx.stage.WindowEvent;
 
 public class Main extends Application{
 	
+	/**
+	 * @param fontList - a list of fonts that are grabbed from the computer
+	 * @param fontBox - the drop down that the user can select a font from
+	 * @param fontSize - the text field for the user entered font size
+	 * @param startB - button that starts the networking
+	 * @param w - text field for the width of the paper
+	 * @param h - text field for the height of the paper being printed
+	 * @param portNum - text field for the optional port number enter
+	 * @param error - text view for error messages
+	 * @param runningMessage - text view for text that shows when the server is running
+	 */
 	Server s;
 	static ObservableList<String> fontList = FXCollections.observableArrayList();
 	static ComboBox<String> fontBox = new ComboBox<String>(fontList);
@@ -32,10 +43,14 @@ public class Main extends Application{
 	static TextField w = new TextField(), h = new TextField(),portNum = new TextField();
 	static Text error = new Text();
 	static Text runningMessage = new Text();
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
+	/**
+	 * Enables all the input boxes if the printer is not selected
+	 */
 	public static void printerNotConnect(){
 		fontBox.setDisable(false);
 		fontSize.setDisable(false);
@@ -46,10 +61,17 @@ public class Main extends Application{
 		error.setText("Please Choose a Printer");
 	}
 	
+	/**
+	 * Sets the text of the message that shows while server is running
+	 */
 	public static void goodPrint(){
 		runningMessage.setText("Running Please Do Not Close!");
 	}
 	
+	/**
+	 * Checks validity of the user entered fields
+	 * Gives sets error message if fields are not valid
+	 */
 	public void startServer(){
 		try{
 			double x = Double.parseDouble(w.getText());
@@ -113,6 +135,7 @@ public class Main extends Application{
 	
 	@Override
 	public void start(Stage PrimaryStage){
+		//initialize hints and stuff
 		PrimaryStage.setTitle("Auto-Printer");
 		w.setPromptText("Width");
 		h.setPromptText("Height");
@@ -126,7 +149,7 @@ public class Main extends Application{
 		fontBox.setPromptText("Font (optional)");
 		fontBox.setEditable(false);
 		
-		
+		//gets fonts on the computer
 		String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 		for (String f : fonts){
 			fontBox.getItems().add(f);
@@ -134,7 +157,7 @@ public class Main extends Application{
 		
 		startB.setText("Start Taking Orders");
 		
-		
+		//enables the font size when a font is chosen
 		fontBox.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent event){
@@ -142,6 +165,7 @@ public class Main extends Application{
 			}
 		});
 		
+		//Locks the button until the required fields are entered
 		BooleanBinding bb = new BooleanBinding(){
 			{
 				super.bind(w.textProperty(), h.textProperty());
@@ -152,6 +176,7 @@ public class Main extends Application{
 			}
 		};
 		startB.disableProperty().bind(bb);
+		
 		startB.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent event){
